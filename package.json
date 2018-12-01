@@ -1,0 +1,25 @@
+{
+  "name": "snaky-rhythm",
+  "version": "0.1.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.3",
+    "babel-preset-env": "^1.6.1",
+    "event-stream": "3.3.4",
+    "fs-extra": "^5.0.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-footer": "^2.0.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "raw-loader": "^0.5.1",
+    "uglifyjs-webpack-plugin": "^1.2.2",
+    "webpack": "^4.1.0"
+  }
+}
