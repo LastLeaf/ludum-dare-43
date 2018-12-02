@@ -28,15 +28,15 @@ impl Cover {
         let cover = element!(&cfg, Empty {
             Image {
                 position: PositionType::Absolute;
-                left: 400.;
-                top: 440.;
+                left: 420.;
+                top: 300.;
                 width: 120.;
                 height: 120.;
                 set_loader(resource.image(head));
             };
             Empty {
                 position: PositionType::Absolute;
-                left: 600.;
+                left: 450.;
                 top: 450.;
                 color: (0.7, 0.5, 0.5, 1.);
                 Text {
@@ -48,12 +48,12 @@ impl Cover {
             };
             Empty {
                 position: PositionType::Absolute;
-                left: 600.;
+                left: 450.;
                 top: 500.;
                 width: 100.;
                 height: 40.;
                 color: (0.2, 0.2, 0.2, 1.);
-                background_color: (0.5, 0.5, 0.5, 1.);
+                background_color: (0.7, 0.7, 0.7, 1.);
                 Text {
                     display: DisplayType::Block;
                     font_size: 26.;
@@ -62,6 +62,20 @@ impl Cover {
                 };
                 @ "touchend" => move |_: &Event| {
                     start_level(&ctx_clone_1, &resource_clone_1);
+                };
+            };
+            Empty {
+                position: PositionType::Absolute;
+                left: 450.;
+                top: 650.;
+                width: 100.;
+                height: 30.;
+                color: (0.5, 0.5, 0.5, 1.);
+                Text {
+                    display: DisplayType::Block;
+                    font_size: 16.;
+                    line_height: 30.;
+                    set_text("Created by LastLeaf with ♥ for Ludum Dare 43");
                 };
             };
         });

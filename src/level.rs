@@ -476,8 +476,8 @@ impl Level {
                         40 | 115 => {
                             (0, 1) // down
                         }
-                        32 => {
-                            (0, 0) // space
+                        13 => {
+                            (0, 0) // enter
                         },
                         114 | 82 => {
                             level_ended = Some(num);

@@ -39,8 +39,8 @@ pub fn get(num: usize) -> LevelConfig {
                 +++++++++
             "),
             initial_dialog: vec![
-                (BlockState::Red, "My name is Little Red\n\n[SPACE] continue"),
-                (BlockState::Red, "Every morning I go to grandma's\nhouse in the forest.\nI can use WASD or arrow keys\nto move, or SPACE to stay."),
+                (BlockState::Red, "My name is Little Red.\n\n[SPACE] continue"),
+                (BlockState::Red, "Every morning I go to grandma's\nhouse in the forest.\nI can use WASD or arrow keys\nto move, or Enter to stay."),
             ],
             related_skill: 0,
             witch_dialog: vec![],
@@ -88,7 +88,7 @@ pub fn get(num: usize) -> LevelConfig {
                 (BlockState::Witch, "Monsters are much more\nterrifying in this forest."),
                 (BlockState::Witch, "You will be eaten if caught\nby one of them!"),
                 (BlockState::Red, "*nod* *nod*"),
-                (BlockState::Witch, "I can teach you ice magic.\nIt can freeze a block\nand prevent them coming near."),
+                (BlockState::Witch, "I can teach you ice magic.\nIt can freeze one empty land\nand prevent them coming near."),
                 (BlockState::Witch, "But you have to sacrifice\nyour beautiful ears."),
                 (BlockState::Flower, "Number key to continue:\n\n[1] Learn ice magic!"),
             ],
@@ -172,7 +172,7 @@ pub fn get(num: usize) -> LevelConfig {
                 +++++++++++
             "),
             initial_dialog: vec![
-                (BlockState::Blue, "I feel much safer with your magic!"),
+                (BlockState::Blue, "I feel much safer with magic!"),
                 (BlockState::Red, "Well... Still, be careful.\nMonsters are becoming more."),
             ],
             related_skill: 1,
@@ -180,7 +180,9 @@ pub fn get(num: usize) -> LevelConfig {
                 (BlockState::Witch, "Well..."),
                 (BlockState::Witch, "It is much more dangerous."),
                 (BlockState::Red, "I have never seen so many!"),
-                (BlockState::Witch, "Don't worry.\nI know a great magic.\nIt can give you sharp teeth."),
+                (BlockState::Witch, "If you feel dangerous, you can stay\nin current block with [Enter]."),
+                (BlockState::Red, "I know it."),
+                (BlockState::Witch, "And...\nI know a great magic.\nIt can give you sharp teeth."),
                 (BlockState::Witch, "If you have sharp teeth,\nyou can eat monsters!"),
                 (BlockState::Witch, "But, of cause,\nyou have to sacrifice your\noriginal teeth."),
                 (BlockState::Flower, "Choose:\n\n[1] Get sharp teeth!\n[2] No, I'll find other way."),
@@ -192,7 +194,8 @@ pub fn get(num: usize) -> LevelConfig {
                     (BlockState::Witch, "@#^$%&^#^*&%^$*%"),
                     (BlockState::Red, "..."),
                     (BlockState::Witch, "@^$^&!!&**^%$$*"),
-                    (BlockState::Red, "Strange feeling..."),
+                    (BlockState::Red, "Feeling strange..."),
+                    (BlockState::Witch, "To eat a monster,\nstep on the monster's block."),
                 ],
                 vec![
                     (BlockState::Red, "No, I will find another way."),
@@ -287,7 +290,7 @@ pub fn get(num: usize) -> LevelConfig {
             initial_dialog: vec![
                 (BlockState::Blue, "Help!"),
                 (BlockState::Red, "Why are you there?"),
-                (BlockState::Blue, "I was just get lost."),
+                (BlockState::Blue, "I was lost in the forest."),
                 (BlockState::Blue, "Then I found monsters are\neverywhere!"),
                 (BlockState::Red, "I will help with magic!"),
             ],
