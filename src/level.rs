@@ -1,8 +1,6 @@
 use std::rc::Rc;
 use std::cell::{Cell, RefCell};
-use std::time::{Instant, Duration};
 use std::collections::{HashMap, VecDeque};
-use glayout;
 use glayout::{canvas};
 use glayout::tree::{TreeNodeRc};
 use glayout::canvas::element::{Event, Element, Empty, Text, Image};
@@ -24,6 +22,7 @@ pub enum BlockState {
 
 #[derive(Clone)]
 pub struct LevelConfig {
+    pub audio: i32,
     pub map: Vec<Vec<BlockState>>,
     pub initial_dialog: Vec<(BlockState, &'static str)>,
     pub witch_dialog: Vec<(BlockState, &'static str)>,
@@ -152,6 +151,11 @@ impl Level {
         let row_count = level_config.map.len();
         let col_count = level_config.map[0].len();
 
+        // audio
+        unsafe {
+            play_audio(level_config.audio)
+        };
+
         // initial layout
         let context = context_clone.clone();
         let mut ctx = context.borrow_mut();
@@ -271,11 +275,13 @@ impl Level {
         let context = context_clone;
         frame!(move |_| {
             if level_ended.is_some() {
-                fading_status -= 0.03;
+                fading_status -= 0.12;
                 if fading_status > 0. {
                     fading_cover.elem().style_mut().width(1280.);
                     fading_cover.elem().style_mut().height(720.);
                     fading_cover.elem().style_mut().opacity(1. - fading_status);
+                    let mut ctx = context.borrow_mut();
+                    ctx.redraw();
                     return true;
                 }
                 let mut lv = level_ended.unwrap();

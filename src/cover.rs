@@ -50,14 +50,14 @@ impl Cover {
                 position: PositionType::Absolute;
                 left: 450.;
                 top: 500.;
-                width: 100.;
-                height: 40.;
+                width: 80.;
+                height: 30.;
                 color: (0.2, 0.2, 0.2, 1.);
                 background_color: (0.7, 0.7, 0.7, 1.);
                 Text {
                     display: DisplayType::Block;
-                    font_size: 26.;
-                    line_height: 40.;
+                    font_size: 20.;
+                    line_height: 30.;
                     set_text(" Play > ");
                 };
                 @ "touchend" => move |_: &Event| {

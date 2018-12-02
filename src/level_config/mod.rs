@@ -31,6 +31,7 @@ pub fn get(num: usize) -> LevelConfig {
     match num {
 
         0 => LevelConfig {
+            audio: 0,
             map: convert_map_str("
                 +++++++++
                 ++++   F+
@@ -49,6 +50,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         1 => LevelConfig {
+            audio: 0,
             map: convert_map_str("
                 +++++++++
                 ++++  MF+
@@ -67,6 +69,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         2 => LevelConfig {
+            audio: 0,
             map: convert_map_str("
                 ++++++++++
                 +F       +
@@ -101,13 +104,14 @@ pub fn get(num: usize) -> LevelConfig {
                     (BlockState::Witch, "!@#%#@$%^*^%&&*"),
                     (BlockState::Red, "..."),
                     (BlockState::Red, "I got it!"),
-                    (BlockState::Witch, "Great! Try click an empty land!"),
+                    (BlockState::Witch, "Great!\nTry click on an empty land!"),
                 ],
             ],
             blue_dialog: vec![],
         },
 
         3 => LevelConfig {
+            audio: 0,
             map: convert_map_str("
                 ++++++++
                 +F     +
@@ -132,6 +136,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         4 => LevelConfig {
+            audio: 1,
             map: convert_map_str("
                 +++++++++
                 +F+     +
@@ -160,6 +165,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         5 => LevelConfig {
+            audio: 1,
             map: convert_map_str("
                 +++++++++++
                 +F     M+++
@@ -180,7 +186,7 @@ pub fn get(num: usize) -> LevelConfig {
                 (BlockState::Witch, "Well..."),
                 (BlockState::Witch, "It is much more dangerous."),
                 (BlockState::Red, "I have never seen so many!"),
-                (BlockState::Witch, "If you feel dangerous, you can stay\nin current block with [Enter]."),
+                (BlockState::Witch, "If you feel dangerous,\nyou can stay in\ncurrent block with [Enter]."),
                 (BlockState::Red, "I know it."),
                 (BlockState::Witch, "And...\nI know a great magic.\nIt can give you sharp teeth."),
                 (BlockState::Witch, "If you have sharp teeth,\nyou can eat monsters!"),
@@ -206,6 +212,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         6 => LevelConfig {
+            audio: 1,
             map: convert_map_str("
                 +++++++++
                 +F  M   +
@@ -250,6 +257,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         7 => LevelConfig {
+            audio: 1,
             map: convert_map_str("
                 +++++++++++
                 +F      M +
@@ -273,6 +281,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         8 => LevelConfig {
+            audio: 2,
             map: convert_map_str("
                 +++++++++++
                 +F        +
@@ -299,7 +308,7 @@ pub fn get(num: usize) -> LevelConfig {
                 (BlockState::Witch, "Well..."),
                 (BlockState::Witch, "I have no idea now."),
                 (BlockState::Witch, "Monsters are just crazy."),
-                (BlockState::Witch, "If you have accepted all my\noffers, I have a way to rescue\nyou both..."),
+                (BlockState::Witch, "If you have accepted all my\noffers before, I have a way to\nrescue you both..."),
                 (BlockState::Red, "..."),
                 (BlockState::Witch, "..."),
                 (BlockState::Red, "..."),
@@ -311,6 +320,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         9 => LevelConfig {
+            audio: 2,
             map: convert_map_str("
                 +++++++
                 +R   F+
@@ -318,7 +328,7 @@ pub fn get(num: usize) -> LevelConfig {
             "),
             initial_dialog: vec![
                 (BlockState::Red, "That day,\nI lost an important friend."),
-                (BlockState::Red, "I killed all the monsters\nwith great anger."),
+                (BlockState::Red, "Then I killed all the monsters\nwith great anger."),
                 (BlockState::Red, "The forest is peaceful now..."),
                 (BlockState::Red, "with my friend\nsleeping here forever."),
             ],
@@ -329,6 +339,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         10 => LevelConfig {
+            audio: 2,
             map: convert_map_str("
                 +++++++++++
                 +F        +
@@ -366,7 +377,12 @@ pub fn get(num: usize) -> LevelConfig {
                 (BlockState::Red, "accept it."),
                 (BlockState::Witch, "OK."),
                 (BlockState::Witch, "@%$#!#&@^&*(&^)"),
+                (BlockState::Red, "..."),
                 (BlockState::Witch, "&%^*$%#!@%&%$*"),
+                (BlockState::Red, "..."),
+                (BlockState::Witch, "@#%^%@#$&"),
+                (BlockState::Witch, "%$&^&%"),
+                (BlockState::Witch, "$%^"),
                 (BlockState::Unreachable, ""),
             ],
             choices_dialog: vec![],
@@ -374,6 +390,7 @@ pub fn get(num: usize) -> LevelConfig {
         },
 
         11 => LevelConfig {
+            audio: 3,
             map: convert_map_str("
                 ++++++++
                 +     F+

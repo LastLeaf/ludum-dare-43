@@ -5,6 +5,10 @@ mergeInto(LibraryManager.library, {
   },
   play_audio: function(num) {
     var audio = []
+    audio[0] = document.getElementById('audio_1')
+    audio[1] = document.getElementById('audio_2')
+    audio[2] = document.getElementById('audio_3')
+    audio[3] = document.getElementById('audio_4')
     for (var i = 0; i < audio.length; i++) {
       if (i === num) {
         audio[i].play()
