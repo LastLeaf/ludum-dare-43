@@ -6,13 +6,13 @@ use glayout::canvas::element::style::{PositionType, DisplayType};
 
 pub struct Cover {}
 
-fn start_level(context: &Rc<RefCell<canvas::CanvasContext>>, resource: &super::resource::Resource, num: usize) {
+fn start_level(context: &Rc<RefCell<canvas::CanvasContext>>, resource: &super::resource::Resource) {
     let ctx = context.clone();
     ctx.borrow_mut().root().remove(0);
     super::level::Level::show(context.clone(), resource.clone(), 0, super::level::RedSkills {
-        ice: true,
-        bite: true,
-        fire: true,
+        ice: false,
+        bite: false,
+        fire: false,
     });
 }
 
@@ -61,7 +61,7 @@ impl Cover {
                     set_text(" Play > ");
                 };
                 @ "touchend" => move |_: &Event| {
-                    start_level(&ctx_clone_1, &resource_clone_1, 0);
+                    start_level(&ctx_clone_1, &resource_clone_1);
                 };
             };
         });

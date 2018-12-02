@@ -55,11 +55,20 @@ impl Level {
         if num < super::level_config::len() {
             Self::show(context.clone(), resource.clone(), num, skills);
         } else {
-            super::cover::Cover::show(context.clone(), resource.clone(), "blue");
+            super::cover::Cover::show(context.clone(), resource.clone(), if num == 12 {
+                "blue"
+            } else {
+                match (skills.bite, skills.fire) {
+                    (false, false) => "red",
+                    (false, true) => "red_with_skin",
+                    (true, false) => "red_with_teeth",
+                    (true, true) => "red_with_teeth_skin",
+                }
+            });
         }
     }
 
-    fn update_map(resource: &super::resource::Resource, node: &TreeNodeRc<Element>, map: &Vec<Vec<BlockState>>, skills: RedSkills) {
+    fn update_map(resource: &super::resource::Resource, node: &TreeNodeRc<Element>, map: &Vec<Vec<BlockState>>, skills: RedSkills, num: usize) {
         for j in 0..map.len() {
             let row = &map[j];
             let row_node = node.child(j);
@@ -69,12 +78,16 @@ impl Level {
                 let loader_name = match cell {
                     BlockState::Empty => "empty",
                     BlockState::Unreachable => "unreachable",
-                    BlockState::Red => match (skills.bite, skills.fire) {
-                        (false, false) => "red",
-                        (false, true) => "red_with_skin",
-                        (true, false) => "red_with_teeth",
-                        (true, true) => "red_with_teeth_skin",
-                    },
+                    BlockState::Red => if num == 11 {
+                            "blue"
+                        } else {
+                            match (skills.bite, skills.fire) {
+                                (false, false) => "red",
+                                (false, true) => "red_with_skin",
+                                (true, false) => "red_with_teeth",
+                                (true, true) => "red_with_teeth_skin",
+                            }
+                        },
                     BlockState::Blue => "blue",
                     BlockState::Witch => "witch",
                     BlockState::Monster => "monster",
@@ -127,7 +140,12 @@ impl Level {
         // speaking_node.elem().style_mut().display(DisplayType::None);
     }
 
-    pub fn show(context: Rc<RefCell<canvas::CanvasContext>>, resource: super::resource::Resource, num: usize, mut skills: RedSkills) {
+    pub fn show(context: Rc<RefCell<canvas::CanvasContext>>, resource: super::resource::Resource, mut num: usize, mut skills: RedSkills) {
+        if skills.bite && skills.fire && num == 8 {
+            num = 10;
+        }
+
+        let original_skills = skills.clone();
         let context_clone = context.clone();
         let resource = resource.clone();
         let mut level_config = super::level_config::get(num);
@@ -172,9 +190,19 @@ impl Level {
                     set_loader(resource.image("speaking_arrow"));
                 };
             };
+            Empty {
+                id: "fading_cover";
+                position: PositionType::Absolute;
+                display: DisplayType::Block;
+                width: 1280.;
+                height: 720.;
+                opacity: 1.;
+                background_color: (0.2, 0.2, 0.2, 1.);
+            };
         }));
         let mut map = ctx.node_by_id("map").unwrap();
         let mut speaking = ctx.node_by_id("speaking").unwrap();
+        let fading_cover = ctx.node_by_id("fading_cover").unwrap();
 
         // put blocks into map
         let mut flower_pos = (0, 0);
@@ -223,7 +251,7 @@ impl Level {
                 }
             }
         }
-        Self::update_map(&resource, &map, &level_config.map, skills);
+        Self::update_map(&resource, &map, &level_config.map, skills, num);
 
         // states
         let mut level_ended = None;
@@ -237,19 +265,41 @@ impl Level {
             bite: false,
             fire: false,
         };
+        let mut fading_status = 0.;
+        let mut cheating_enabled = false;
 
         let context = context_clone;
         frame!(move |_| {
             if level_ended.is_some() {
-                Self::end_level(&context, &resource, level_ended.unwrap(), skills);
+                fading_status -= 0.03;
+                if fading_status > 0. {
+                    fading_cover.elem().style_mut().width(1280.);
+                    fading_cover.elem().style_mut().height(720.);
+                    fading_cover.elem().style_mut().opacity(1. - fading_status);
+                    return true;
+                }
+                let mut lv = level_ended.unwrap();
+                if num == 9 && lv == 10 {
+                    lv = 13;
+                }
+                Self::end_level(&context, &resource, lv, skills);
                 return false;
+            }
+            if fading_status < 1. {
+                fading_status += 0.08;
+                if fading_status >= 1. {
+                    fading_status = 1.;
+                    fading_cover.elem().style_mut().width(0.);
+                    fading_cover.elem().style_mut().height(0.);
+                } else {
+                    fading_cover.elem().style_mut().opacity(1. - fading_status);
+                }
             }
 
             // handling keys
             let mut ctx = context.borrow_mut();
             let current_key = ctx.fetch_last_key_code();
             let effective_key = if current_key.is_down {
-                println!("key: {:?}", current_key.key_code);
                 Some(current_key)
             } else {
                 None
@@ -258,16 +308,57 @@ impl Level {
             // fetching clicks
             let effective_click = prev_click_pos.replace(None);
 
+            // cheating keys!
+            match effective_key {
+                Some(ref key) => {
+                    match key.key_code {
+                        48 => {
+                            cheating_enabled = true;
+                            return true;
+                        },
+                        55 => {
+                            if cheating_enabled {
+                                skills.ice = true;
+                                Self::update_map(&resource, &map, &level_config.map, skills, num);
+                                return true;
+                            }
+                        },
+                        56 => {
+                            if cheating_enabled {
+                                skills.bite = true;
+                                Self::update_map(&resource, &map, &level_config.map, skills, num);
+                                return true;
+                            }
+                        },
+                        57 => {
+                            if cheating_enabled {
+                                skills.fire = true;
+                                Self::update_map(&resource, &map, &level_config.map, skills, num);
+                                return true;
+                            }
+                        },
+                        54 => {
+                            if cheating_enabled {
+                                level_ended = Some(num + 1);
+                                return true;
+                            }
+                        },
+                        _ => { },
+                    }
+                },
+                _ => { }
+            }
+
             // check witch and blue dialogs
-            if blue_pos.is_some() && (red_pos.0 as i32 - blue_pos.unwrap().0 as i32).abs() + (red_pos.1 as i32 - blue_pos.unwrap().1 as i32).abs() <= 1 {
-                if !blue_dialog_shown {
-                    blue_dialog_shown = true;
-                    pending_msg.append(&mut level_config.blue_dialog.clone());
-                }
-            } else if witch_pos.is_some() && (red_pos.0 as i32 - witch_pos.unwrap().0 as i32).abs() + (red_pos.1 as i32 - witch_pos.unwrap().1 as i32).abs() <= 1 {
+            if witch_pos.is_some() && (red_pos.0 as i32 - witch_pos.unwrap().0 as i32).abs() + (red_pos.1 as i32 - witch_pos.unwrap().1 as i32).abs() <= 1 {
                 if !witch_dialog_shown {
                     witch_dialog_shown = true;
                     pending_msg.append(&mut level_config.witch_dialog.clone());
+                }
+            } else if blue_pos.is_some() && (red_pos.0 as i32 - blue_pos.unwrap().0 as i32).abs() + (red_pos.1 as i32 - blue_pos.unwrap().1 as i32).abs() <= 1 {
+                if !blue_dialog_shown {
+                    blue_dialog_shown = true;
+                    pending_msg.append(&mut level_config.blue_dialog.clone());
                 }
             }
 
@@ -308,6 +399,9 @@ impl Level {
                                 BlockState::Flower => red_pos,
                                 BlockState::Blue => blue_pos.unwrap(),
                                 BlockState::Witch => witch_pos.unwrap(),
+                                BlockState::Unreachable => {
+                                    return true;
+                                },
                                 _ => panic!()
                             }, &current_msg.1[0..current_msg_len]);
                             ctx.redraw();
@@ -320,9 +414,14 @@ impl Level {
                         let t = Some(pending_msg.remove(0));
                         current_msg = t;
                         current_msg_len = 0;
+                        if current_msg.unwrap().0 == BlockState::Unreachable {
+                            level_ended = Some(num + 1);
+                            return true;
+                        }
                         return true;
                     }
                     Self::hide_dialog(&mut speaking);
+                    Self::update_map(&resource, &map, &level_config.map, skills, num);
                 }
             }
 
@@ -338,7 +437,7 @@ impl Level {
                             pending_msg.append(&mut vec![(BlockState::Red, "Ice wall !!!")]);
                             level_config.map[click_pos.1][click_pos.0] = BlockState::Ice;
                             skill_used.ice = true;
-                            Self::update_map(&resource, &map, &level_config.map, skills);
+                            Self::update_map(&resource, &map, &level_config.map, skills, num);
                         }
                     }
                 } else if s == BlockState::Monster {
@@ -355,7 +454,7 @@ impl Level {
                                 }
                             }
                             skill_used.fire = true;
-                            Self::update_map(&resource, &map, &level_config.map, skills);
+                            Self::update_map(&resource, &map, &level_config.map, skills, num);
                         }
                     }
                 }
@@ -380,16 +479,10 @@ impl Level {
                         32 => {
                             (0, 0) // space
                         },
-                        114 => {
+                        114 | 82 => {
                             level_ended = Some(num);
+                            skills = original_skills.clone();
                             return true;
-                        },
-                        110 => {
-                            if key.shift {
-                                level_ended = Some(num + 1);
-                                return true;
-                            }
-                            (-1, -1)
                         },
                         _ => {
                             (-1, -1)
@@ -408,7 +501,7 @@ impl Level {
                 let target_type = level_config.map[move_target.1][move_target.0].clone();
                 let mut move_success = true;
                 if target_type != BlockState::Empty && target_type != BlockState::Flower {
-                    if target_type == BlockState::Monster {
+                    if target_type == BlockState::Monster || num == 11 {
                         if skills.bite {
                             if skill_used.bite {
                                 pending_msg.append(&mut vec![(BlockState::Red, "I am already full.\nI can't eat monsters now.")]);
@@ -425,6 +518,8 @@ impl Level {
                             }
                         } else {
                             pending_msg.append(&mut vec![(BlockState::Red, "Monster... X_X")]);
+                            level_ended = Some(num);
+                            skills = original_skills.clone();
                             move_success = false;
                         }
                     } else {
@@ -437,9 +532,12 @@ impl Level {
                 level_config.map[red_pos.1][red_pos.0] = BlockState::Empty;
                 level_config.map[move_target.1][move_target.0] = BlockState::Red;
                 if blue_pos.is_some() {
-                    level_config.map[blue_pos.unwrap().1][blue_pos.unwrap().0] = BlockState::Empty;
-                    level_config.map[red_pos.1][red_pos.0] = BlockState::Blue;
-                    blue_pos = Some(red_pos);
+                    let blue_pos_u = blue_pos.clone().unwrap();
+                    if (red_pos.0 as i32 - blue_pos_u.0 as i32).abs() + (red_pos.1 as i32 - blue_pos_u.1 as i32).abs() <= 1 {
+                        level_config.map[blue_pos_u.1][blue_pos_u.0] = BlockState::Empty;
+                        level_config.map[red_pos.1][red_pos.0] = BlockState::Blue;
+                        blue_pos = Some(red_pos);
+                    }
                 }
                 red_pos = move_target;
             }
@@ -455,6 +553,8 @@ impl Level {
                 if !state.moving {
                     if (red_pos.0 as i32 - state.pos.0 as i32).abs() + (red_pos.1 as i32 - state.pos.1 as i32).abs() <= 4 {
                         state.moving = true
+                    } else if blue_pos.is_some() && ((blue_pos.unwrap().0 as i32 - state.pos.0 as i32).abs() + (blue_pos.unwrap().1 as i32 - state.pos.1 as i32).abs() <= 4) {
+                        state.moving = true
                     } else {
                         continue
                     }
@@ -469,7 +569,7 @@ impl Level {
                     let pos = queue.pop_front();
                     if pos.is_none() { break };
                     let pos = pos.unwrap();
-                    for test_direction in [(-1, 0), (0, -1), (1, 0), (0, 1)].iter() {
+                    for test_direction in [(-1, 0), (0, 1), (1, 0), (0, -1)].iter() {
                         let move_target = ((pos.0 as i32 + test_direction.0) as usize, (pos.1 as i32 + test_direction.1) as usize);
                         let target_type = level_config.map[move_target.1][move_target.0].clone();
                         let t = direction[&pos];
@@ -481,15 +581,18 @@ impl Level {
                             ideal_direction = ideal_dir.unwrap();
                             queue.truncate(0);
                             break;
-                        } else if target_type == BlockState::Empty || target_type == BlockState::Ice {
-                            queue.push_back(move_target);
-                            direction.insert(move_target, ideal_dir);
+                        } else if target_type == BlockState::Empty || target_type == BlockState::Ice || target_type == BlockState::Monster {
+                            if !direction.contains_key(&move_target) {
+                                queue.push_back(move_target);
+                                direction.insert(move_target, ideal_dir);
+                            }
                         }
                     }
                 }
                 // move
                 let new_pos = (state.pos.0 as i32 + ideal_direction.0, state.pos.1 as i32 + ideal_direction.1);
-                if level_config.map[new_pos.1 as usize][new_pos.0 as usize] == BlockState::Ice {
+                let target_type = level_config.map[new_pos.1 as usize][new_pos.0 as usize];
+                if target_type == BlockState::Ice || target_type == BlockState::Monster || (num == 11 && target_type == BlockState::Red) {
                     // do nothing
                 } else {
                     level_config.map[state.pos.1][state.pos.0] = BlockState::Empty;
@@ -500,10 +603,11 @@ impl Level {
                 // check lose
                 if red_pos == state.pos || blue_pos == Some(state.pos) {
                     level_ended = Some(num);
+                    skills = original_skills.clone();
                 }
             }
 
-            Self::update_map(&resource, &map, &level_config.map, skills);
+            Self::update_map(&resource, &map, &level_config.map, skills, num);
             ctx.redraw();
             return true;
         });
