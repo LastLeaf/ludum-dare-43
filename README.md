@@ -23,7 +23,7 @@ This game requires keyboard and mouse.
 
 ## How to Play
 
-[https://github.lastleaf.me/ludum-dare-43/](https://github.lastleaf.me/ludum-dare-43/)
+[http://github.lastleaf.me/ludum-dare-43/](http://github.lastleaf.me/ludum-dare-43/)
 
 This HTML5 game requires WebGL support. Please play with latest Chrome or Firefox.
 
