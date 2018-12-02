@@ -29,6 +29,8 @@ fn loading() {
     };
     loader.wait(Duration::new(5, 0));
     loader.load_image("empty", "resource/empty.png");
+    loader.load_image("ice", "resource/ice.png");
+    loader.load_image("fire", "resource/fire.png");
     loader.load_image("unreachable", "resource/tree.png");
     loader.load_image("flower", "resource/home.png");
     loader.load_image("witch", "resource/witch.png");
@@ -38,6 +40,8 @@ fn loading() {
     loader.load_image("red_with_teeth", "resource/red_with_teeth.png");
     loader.load_image("red_with_skin", "resource/red_with_skin.png");
     loader.load_image("red_with_teeth_skin", "resource/red_with_teeth_skin.png");
+    loader.load_image("speaking_arrow", "resource/speaking_arrow.png");
+    loader.load_image("speaking_arrow_revert", "resource/speaking_arrow_revert.png");
     resource::ResourceLoader::ended(loader, move |resource| {
         cover::Cover::show(canvas.context(), resource, "red");
     });

@@ -9,7 +9,11 @@ pub struct Cover {}
 fn start_level(context: &Rc<RefCell<canvas::CanvasContext>>, resource: &super::resource::Resource, num: usize) {
     let ctx = context.clone();
     ctx.borrow_mut().root().remove(0);
-    super::level::Level::show(context.clone(), resource.clone(), 0);
+    super::level::Level::show(context.clone(), resource.clone(), 0, super::level::RedSkills {
+        ice: true,
+        bite: true,
+        fire: true,
+    });
 }
 
 impl Cover {
