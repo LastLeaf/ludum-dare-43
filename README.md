@@ -16,7 +16,7 @@ This game requires keyboard and mouse.
 
 * [SPACE] continue messages
 * [1] [2] make choices
-* [W] [A] [S] [D] or arrow keys for map moving
+* arrow keys for map moving
 * [Enter] stay on the same block (no moving)
 * [R] restart current level
 * mouse click for some skills
