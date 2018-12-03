@@ -507,7 +507,7 @@ impl Level {
                 let target_type = level_config.map[move_target.1][move_target.0].clone();
                 let mut move_success = true;
                 if target_type != BlockState::Empty && target_type != BlockState::Flower {
-                    if target_type == BlockState::Monster || num == 11 {
+                    if target_type == BlockState::Monster && num != 11 {
                         if skills.bite {
                             if skill_used.bite {
                                 pending_msg.append(&mut vec![(BlockState::Red, "I am already full.\nI can't eat monsters now.")]);

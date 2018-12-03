@@ -41,7 +41,7 @@ pub fn get(num: usize) -> LevelConfig {
             "),
             initial_dialog: vec![
                 (BlockState::Red, "My name is Little Red.\n\n[SPACE] continue"),
-                (BlockState::Red, "Every morning I go to grandma's\nhouse in the forest.\nI can use WASD or arrow keys\nto move, or Enter to stay."),
+                (BlockState::Red, "Every morning I go to grandma's\nhouse in the forest.\nI can use arrow keys to move,\nor [Enter] to stay."),
             ],
             related_skill: 0,
             witch_dialog: vec![],
